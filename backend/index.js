@@ -1,8 +1,17 @@
+import dns from "node:dns/promises";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import mongoose from "mongoose"
 
 dotenv.config()
+
+mongoose.connect(process.env.MONGO_URI).then(() => {
+    console.log("Database is connected")
+}).catch((err) => {
+    console.log(err)
+})
 
 const app = express()
 
@@ -10,12 +19,12 @@ const app = express()
 app.use(
     cors({
     origin: process.env.FRONT_END_URL || "http://localhost:5173", 
-    methods: ["GET", "POST", "PUT", DELETE],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     })
 )
 
-// Middleware to handle json oject in request body
+// Middleware to handle json object in request body
 app.use(express.json())
 
 app.listen(3000, () => {
