@@ -28,7 +28,7 @@ export const createTask = async(req, res, next) => {
             createdBy: req.user.id,
         })
 
-        res.status(201).json({ message: "Task created successfully", task })
+        res.status(201).json({ message: "Task Created Successfully", task })
     }catch (error) {
         next(error)
     }
@@ -148,8 +148,25 @@ export const updateTask = async(req, res, next) => {
 
         const updateTask = await task.save()
 
-        return res.status(200).json({ updateTask, message: "Task updated successfully!"})
+        return res.status(200).json({ updateTask, message: "Task Updated Successfully!"})
     } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteTask = async(req, res, next) => {
+    try {
+        const task = await Task.findById(req.params.id)
+
+        if(!task){
+            return next(errorHandler(404, "Task Not Found!"))
+        }
+
+        await task.deleteOne()
+
+        res.status(200).json({ message: "Task Deleted Successfully!" })
+
+    } catch(error){
         next(error)
     }
 }
